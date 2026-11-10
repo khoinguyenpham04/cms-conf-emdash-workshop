@@ -185,11 +185,9 @@ function init() {
     pin(resolve(a.getAttribute("href")!));
     if (rail.dataset.open === "true") closeSheet(false);
   });
-  // A rail taller than its window has no scrollbar: it fades out at whichever edge has more rows.
-  const syncMore = () => {
+  // A rail taller than its window fades out at the bottom while more rows follow.
+  const syncMore = () =>
     rail.toggleAttribute("data-more", rail.scrollHeight - rail.clientHeight - rail.scrollTop > 2);
-    rail.toggleAttribute("data-less", rail.scrollTop > 2);
-  };
   rail.addEventListener("scroll", syncMore, { passive: true });
   addEventListener("resize", () => {
     moveIndicator();

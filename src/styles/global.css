@@ -344,22 +344,27 @@ html.ready .topbar:not([data-instant]) { transition: background-color var(--d-sh
   top: 80px;
   align-self: start;
   /* never taller than the space above the footer, so at the end of the page the rail isn't pushed
-     up under the glass top bar; a short window scrolls it instead (with edge fades) */
+     up under the glass top bar; a short window scrolls it instead (with a fade, see [data-more]) */
   max-height: calc(100vh - 80px - var(--footer-h));
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: none;   /* still scrolls (wheel, touch, keyboard); edge fades ([data-less], [data-more]) say there's more */
+  scrollbar-gutter: stable;
   padding: 2px 4px 8px;
   margin: -2px -4px 0;
 }
-.rail::-webkit-scrollbar { display: none; }
+/* A thin grey scrollbar that stays visible: styling ::-webkit-scrollbar turns off the
+   auto-hiding overlay scrollbar in Chrome and Safari. Firefox gets the standard properties. */
+.rail::-webkit-scrollbar { width: 6px; }
+.rail::-webkit-scrollbar-track { background: transparent; }
+.rail::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+.rail::-webkit-scrollbar-thumb:hover { background: #bdbdbd; }
+@supports not selector(::-webkit-scrollbar) {
+  .rail { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+}
 @media (min-width: 961px) {
-  .rail { --fade-top: 0px; --fade-bottom: 0px; }
-  .rail[data-less] { --fade-top: 32px; }
-  .rail[data-more] { --fade-bottom: 40px; }
-  .rail:is([data-less], [data-more]) {
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent);
-    mask-image: linear-gradient(to bottom, transparent, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent);
+  .rail[data-more] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent);
   }
 }
 .rail-sheet-title { display: none; }
